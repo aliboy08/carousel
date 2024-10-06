@@ -23,47 +23,7 @@ body {
     padding: 4rem 1rem;
 }
 
-.carousel {
-    overflow: hidden;
-}
-
-.slides {
-    display: flex;
-    transition: transform .8s ease;
-}
-
-.slide {
-    flex-shrink: 0;
-}
-
 .item {
     border: 1px solid #fff;
     padding: 2rem;
-}
-
-.nav_con {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin: 2rem 0;;
-}
-
-.pagination {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-
-    .bullet {
-        border: 1px solid #fff;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        cursor: pointer;
-
-        &.active {
-            background: #fff;
-        }
-    }
 }

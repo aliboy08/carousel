@@ -1,3 +1,5 @@
+import { touch_support } from './touch';
+
 export default class Carousel {
     
     constructor(container, options){
@@ -7,6 +9,7 @@ export default class Carousel {
         }
         this.container = container;
         this.options = options;
+        this.translate_x = 0;
 
         this.loop = this.options.loop ?? false;
 
@@ -14,6 +17,7 @@ export default class Carousel {
         this.init_nav();
         this.init_pagination();
         this.init_autoplay();
+        this.init_touch();
     }
 
     init_slides(){
@@ -104,14 +108,10 @@ export default class Carousel {
 
     slide_transition(){
         let distance = -this.translate * this.slide_index;
-        this.slides_container.style.transform = `translateX(${distance}px)`;
+        this.translate_x = distance;
+        this.slides_container.style.transform = `translate3d(${distance}px, 0, 0)`;
         this.check_nav_state();
         this.check_pagination_state();
-
-        if( this.autoplay ) {
-            clearTimeout(this.autoplay_timeout);
-            this.queue_autoplay();
-        }
     }
 
     check_nav_state(){
@@ -127,22 +127,22 @@ export default class Carousel {
         if( !this.options.autoplay ) return;
         this.autoplay = true;
         
-        this.autoplay_interval = this.options.autoplay.duration ?? 4000;
+        this.autoplay_duration = this.options.autoplay.duration ?? 4000;
         this.queue_autoplay();
         this.init_pause_on_hover();
     }
 
     queue_autoplay(){
-        this.autoplay_timeout = setTimeout(()=>{
+        this.autoplay_interval = setInterval(()=>{
             this.slide_next();
-        }, this.autoplay_interval);
+        }, this.autoplay_duration);
     }
 
     init_pause_on_hover(){
         const pause_on_hover = this.options.autoplay.pause_on_hover ?? true;
         if( !pause_on_hover ) return;
         this.slides_container.addEventListener('pointerenter', ()=>{
-            clearTimeout(this.autoplay_timeout);
+            clearInterval(this.autoplay_interval);
         })
         this.slides_container.addEventListener('pointerleave', ()=>{
             this.queue_autoplay();
@@ -182,6 +182,8 @@ export default class Carousel {
             bullet.addEventListener('click', ()=>{
                 this.slide_index = i;
                 this.slide_transition();
+                clearInterval(this.autoplay_interval);
+                this.queue_autoplay();
             }) 
         }
 
@@ -197,6 +199,10 @@ export default class Carousel {
 
         this.current_bullet = this.bullets[this.slide_index];
         this.current_bullet.classList.add('active');
+    }
+
+    init_touch(){
+        touch_support(this);
     }
 
 }

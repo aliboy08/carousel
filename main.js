@@ -1,9 +1,11 @@
 import './style.css'
-import Carousel from './carousel'
+
+import './src/carousel.css';
+import Carousel from './src/carousel'
 
 new Carousel('.carousel', {
     speed: 300,
-    slides_per_view: 2,
+    slides_per_view: 4,
     loop: true,
     gap: 20,
     autoplay: {
